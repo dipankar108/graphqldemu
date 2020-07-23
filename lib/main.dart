@@ -7,19 +7,10 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static final HttpLink httpLink =
-      HttpLink(uri: 'https://countries.trevorblades.com/');
-  ValueNotifier<GraphQLClient> client = ValueNotifier<GraphQLClient>(
-    GraphQLClient(
-      link: httpLink,
-      cache: InMemoryCache(),
-    ),
-  );
   @override
   Widget build(BuildContext context) {
     return GraphQLProvider(
       child: HomePage(),
-      client: client,
     );
   }
 }
