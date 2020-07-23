@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:graphqldemu/Countries.dart';
-import 'package:graphqldemu/countryNameModel.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class HomePage extends StatefulWidget {
   _HomePage createState() => _HomePage();
 }
 
 class _HomePage extends State<HomePage> {
-  CountryNameModel countryNameModel;
-
   @override
   Widget build(BuildContext context) {
-    List<Countries> countryname = countryNameModel.countryname;
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('GraphQl Demu Created by Dipankar Debnath'),
-        ),
-        body: Center(
-          child: ListView(
-            children: [
-              ListTile(
-                title: Text(
-                  countryname.toString(),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    return Scaffold(
+      body: Query(
+          options: QueryOptions(documentNode: gql(r"""
+query{
+  continents{
+name
+  }
+}
+  """)),
+          builder: (QueryResult result,
+              {VoidCallback refetch, FetchMore fetchMore}) {
+            if (result.data == null) {
+              return Text('Data Is Loading');
+            } else {
+              List datal = result.data['continents'];
+              return ListView.builder(
+                  itemCount: datal.length,
+                  itemBuilder: (context, index) {
+                    return Text(datal[index]['name']);
+                  });
+            }
+          }),
     );
   }
 }
